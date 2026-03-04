@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PolicyPro Plus v6</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+:root{--navy:#0A1628;--blue:#2563EB;--sky:#38BDF8;--green:#10B981;--red:#EF4444;--orange:#F97316;--gold:#F59E0B;--bg:#F0F4FF;--card:#fff;--border:#E2E8F0;--muted:#64748B;--wa:#25D366}
+body{font-family:sans-serif;background:var(--bg);color:var(--navy);padding-bottom:75px;font-size:14px;-webkit-text-size-adjust:100%}
+/* HEADER */
+.hdr{background:var(--navy);padding:12px 16px 10px;position:sticky;top:0;z-index:50}
+.hdr-row{display:flex;align-items:center;justify-content:space-between}
+.hdr-brand{display:flex;align-items:center;gap:9px}
+.hdr-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--sky));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.hdr h1{font-size:15px;font-weight:700;color:#fff}
+.hdr h1 span{color:var(--sky)}
+.hdr p{font-size:10px;color:var(--sky)}
+.hdr-btns{display:flex;gap:6px}
+.hbtn{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none}
+.ptitle{margin-top:8px}
+.ptitle h2{font-size:20px;font-weight:700;color:#fff}
+.ptitle p{font-size:11px;color:var(--sky);margin-top:1px}
+/* SEARCH */
+.srch{display:none;margin-top:8px;position:relative}
+.srch.show{display:block}
+.srch input{width:100%;padding:9px 14px 9px 34px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:12px;color:#fff;font-size:13px;outline:none;-webkit-appearance:none}
+.srch input::placeholder{color:rgba(255,255,255,.5)}
+.srch-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--navy);display:flex;border-top:1px solid rgba(255,255,255,.1);z-index:50;padding-bottom:env(safe-area-inset-bottom,0)}
+.nb{flex:1;padding:9px 2px 7px;border:none;background:none;font-size:9px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;-webkit-appearance:none;position:relative}
+.nb .ni{font-size:20px;line-height:1}
+.nb.on{color:#fff}
+.nb.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--sky);border-radius:2px 2px 0 0}
+/* PAGES */
+.page{display:none;padding:14px}
+.page.on{display:block}
+/* CARDS */
+.card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(10,22,40,.07)}
+.ctitle{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ctitle::after{content:'';flex:1;height:1px;background:var(--border)}
+/* DASHBOARD */
+.hero{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:18px;padding:20px;margin-bottom:14px}
+.hero h2{font-size:20px;font-weight:700;color:#fff}
+.hero p{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px}
+.adviser-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;margin-top:10px}
+.adviser-pill span{font-size:11px;color:#fff;font-weight:600}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(10,22,40,.07);border-left:4px solid var(--blue)}
+.stat.o{border-left-color:var(--orange)}.stat.r{border-left-color:var(--red)}.stat.g{border-left-color:var(--green)}
+.snum{font-size:28px;font-weight:700;color:var(--navy);line-height:1}
+.slbl{font-size:11px;color:var(--muted);margin-top:4px}
+/* RENEWAL ALERTS */
+.ral{border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:11px;border:1.5px solid}
+.ral.danger{background:#FEF2F2;border-color:#FECACA}
+.ral.warn{background:#FFFBEB;border-color:#FDE68A}
+.ral.ok{background:#F0FDF4;border-color:#BBF7D0}
+.ral-ico{font-size:24px;flex-shrink:0}
+.ral h3{font-size:13px;font-weight:700}
+.ral p{font-size:11px;color:var(--muted)}
+.ral-btns{margin-left:auto;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.ral-s{background:var(--wa);color:#fff;border:none;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer}
+.ral-c{background:#EFF6FF;color:var(--blue);border:none;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer}
+/* QUICK GRID */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.qbtn{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;-webkit-appearance:none}
+.qbtn .qi{font-size:24px;margin-bottom:6px}
+.qbtn span{display:block;font-size:12px;font-weight:700;color:var(--navy)}
+/* CLIENT LIST */
+.cl{background:var(--card);border-radius:14px;padding:13px;margin-bottom:8px;box-shadow:0 2px 8px rgba(10,22,40,.06);display:flex;align-items:center;gap:12px;cursor:pointer;border:1.5px solid transparent}
+.cl.urg{border-color:#FECACA}
+.av{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.av1{background:linear-gradient(135deg,#1A4DB8,#38BDF8)}.av2{background:linear-gradient(135deg,#059669,#34D399)}
+.av3{background:linear-gradient(135deg,#7C3AED,#A78BFA)}.av4{background:linear-gradient(135deg,#DC2626,#F87171)}
+.av5{background:linear-gradient(135deg,#D97706,#FCD34D)}.av6{background:linear-gradient(135deg,#0891B2,#67E8F9)}
+.cl-info{flex:1;min-width:0}
+.cl-info h3{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-info p{font-size:11px;color:var(--muted);margin-top:1px}
+.cl-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block}
+.th{background:#DBEAFE;color:#1E40AF}.tc{background:#D1FAE5;color:#065F46}.tb{background:#FEF3C7;color:#92400E}
+.tm{background:#EDE9FE;color:#5B21B6}.tr{background:#FEE2E2;color:#991B1B}.tg{background:#D1FAE5;color:#065F46}.to{background:#FFEDD5;color:#9A3412}
+/* TABS */
+.tabs{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:12px;margin-bottom:12px}
+.tab{flex:1;padding:8px 4px;border:none;background:none;border-radius:9px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;-webkit-appearance:none}
+.tab.on{background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(10,22,40,.2)}
+/* FORM */
+.field{margin-bottom:10px}
+label{display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.req{color:var(--red)}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:11px;font-size:14px;font-family:inherit;color:var(--navy);background:var(--bg);outline:none;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);background:#fff}
+textarea{resize:none;height:70px}
+.row2{display:flex;gap:9px}.row2 .field{flex:1}
+.fsec{display:none}.fsec.on{display:block}
+/* BUTTONS */
+.btn{width:100%;padding:13px;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:5px;-webkit-appearance:none}
+.btn-navy{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;box-shadow:0 4px 14px rgba(10,22,40,.22)}
+.btn-outline{background:var(--bg);color:var(--navy);border:1.5px solid var(--border)}
+.btn-red{background:#FEF2F2;color:var(--red);border:1.5px solid #FECACA}
+.btn-green{background:var(--green);color:#fff}
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,.65);z-index:200;overflow-y:auto;padding:14px}
+.overlay.open{display:block}
+.mcard{background:#fff;border-radius:22px;padding:20px;max-width:480px;margin:0 auto;position:relative}
+.mtitle{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.xbtn{position:absolute;top:14px;right:14px;background:var(--bg);border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--muted)}
+/* DETAIL */
+.det-hdr{display:flex;align-items:center;gap:13px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.det-av{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.drow{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.drow:last-of-type{border:none}
+.dlbl{color:var(--muted);font-weight:500;flex-shrink:0}
+.dval{font-weight:700;color:var(--navy);text-align:right;max-width:65%}
+.det-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.act{padding:11px;border-radius:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:none;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-appearance:none}
+.act-wa{background:var(--wa);color:#fff}
+.act-call{background:#DBEAFE;color:#1E40AF}
+.act-edit{background:var(--bg);color:var(--navy);border:1.5px solid var(--border)}
+.act-del{background:#FEF2F2;color:var(--red)}
+/* PREMIUM HISTORY */
+.ph-row{display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border-radius:10px;margin-bottom:6px}
+.ph-yr{font-size:12px;font-weight:700;min-width:44px}
+.ph-bar-wrap{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.ph-bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--sky));border-radius:4px}
+.ph-amt{font-size:12px;font-weight:700;color:var(--blue);min-width:75px;text-align:right}
+/* OUTPUT */
+.out-box{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:13px;padding:13px;font-size:13px;line-height:1.8;min-height:160px;font-family:inherit;color:var(--navy);outline:none;resize:vertical;display:block;margin-bottom:11px;-webkit-appearance:none}
+.abtn-row{display:flex;gap:9px}
+.bcopy{flex:1;padding:12px;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;font-family:inherit;-webkit-appearance:none}
+.bcopy.done{background:#ECFDF5;color:var(--green);border-color:#A7F3D0}
+.bwa{flex:1;padding:12px;background:var(--wa);border:none;border-radius:11px;font-size:12px;font-weight:700;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px}
+/* LOADER */
+.loader{text-align:center;padding:20px;display:none}
+.spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:rot .7s linear infinite;margin:0 auto 8px}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* CLAIM SUB TABS */
+.ctabs{display:flex;gap:6px;margin-bottom:12px}
+.ctab{flex:1;padding:10px 4px;border:none;background:var(--card);border-radius:11px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;box-shadow:0 2px 6px rgba(10,22,40,.07);-webkit-appearance:none}
+.ctab.on{background:var(--navy);color:#fff}
+/* SETTINGS */
+.prof-hero{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:18px;padding:22px;text-align:center;color:#fff;margin-bottom:14px}
+.prof-av{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;border:3px solid rgba(255,255,255,.35)}
+/* DOC ITEM */
+.doc-item{background:var(--card);border-radius:13px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 2px 8px rgba(10,22,40,.06)}
+.doc-ico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.doc-info h3{font-size:13px;font-weight:700;color:var(--navy)}
+.doc-info p{font-size:11px;color:var(--muted);margin-top:2px}
+/* TPA CARD */
+.tpa-card{background:var(--bg);border-radius:12px;padding:13px;margin-bottom:8px;border:1.5px solid var(--border)}
+.tpa-card h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.tpa-card p{font-size:11px;color:var(--muted);margin-bottom:9px}
+.tpa-acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.tpa-act{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:10px;text-decoration:none;font-size:10px;font-weight:700;cursor:pointer;border:none;font-family:inherit;-webkit-appearance:none}
+.tpa-act .ti{font-size:18px;margin-bottom:3px}
+.tpa-act.call{background:#F0FDF4;color:#065F46}
+.tpa-act.mail{background:#EFF6FF;color:#1E40AF}
+.tpa-act.copy{background:#FFFBEB;color:#92400E}
+/* CSTEP */
+.cstep{background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;gap:11px;box-shadow:0 2px 6px rgba(10,22,40,.05)}
+.cnum{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.cstep h3{font-size:13px;font-weight:700;margin-bottom:2px}
+.cstep p{font-size:12px;color:var(--muted);line-height:1.5}
+.helpline{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:12px;padding:12px 14px;color:#fff;display:flex;align-items:center;gap:10px;margin-top:6px;cursor:pointer}
+/* FAB */
+.fab{position:fixed;bottom:84px;right:16px;width:52px;height:52px;background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;border:none;border-radius:50%;font-size:26px;cursor:pointer;box-shadow:0 4px 18px rgba(37,99,235,.45);z-index:49;display:none;align-items:center;justify-content:center;-webkit-appearance:none}
+.fab.show{display:flex}
+/* TOAST */
+.xr{display:flex;align-items:center;gap:8px;margin-bottom:8px}.xl{font-size:11px;font-weight:700;color:var(--muted);min-width:36px}.xb{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden}.xf{height:100%;border-radius:5px;background:linear-gradient(90deg,#1E40AF,#38BDF8)}.xv{font-size:11px;font-weight:700;color:#1E40AF;min-width:70px;text-align:right}.yc{background:var(--card);border-radius:12px;padding:11px;margin-bottom:7px;display:flex;align-items:center;gap:10px;border-left:4px solid #F59E0B}.zc{background:var(--card);border-radius:12px;padding:11px;margin-bottom:7px}.wr{background:var(--bg);border-radius:10px;padding:9px 11px;margin-bottom:5px;display:flex;align-items:center;gap:9px}.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:rgba(10,22,40,.92);color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;display:none;white-space:nowrap;pointer-events:none}
+/* PDF LINK */
+.pdf-link{display:flex;align-items:center;gap:10px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:12px;padding:12px;margin-bottom:8px;text-decoration:none}
+.pdf-link span{font-size:13px;font-weight:700;color:#1E40AF;flex:1}
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .ei{font-size:48px;margin-bottom:12px}
+.empty h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:5px}
+/* CAL BTN */
+.cal-btn{display:flex;align-items:center;gap:8px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:11px;padding:11px 13px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#1E40AF;width:100%;margin-top:10px;-webkit-appearance:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-row">
+    <div class="hdr-brand">
+      <div class="hdr-ico">🛡️</div>
+      <div>
+        <h1>PolicyPro <span>Plus</span></h1>
+        <p>NEW INDIA ASSURANCE</p>
+      </div>
+    </div>
+    <div class="hdr-btns">
+      <button class="hbtn" onclick="toggleSearch()">🔍</button>
+      <button class="hbtn" onclick="goTo('settings')">⚙️</button>
+    </div>
+  </div>
+  <div class="srch" id="srchWrap">
+    <span class="srch-ico">🔍</span>
+    <input type="text" id="srchInput" placeholder="Client शोधा..." oninput="liveSearch()">
+  </div>
+  <div class="ptitle">
+    <h2 id="ptitle">Dashboard</h2>
+    <p id="psub">आजचा आढावा</p>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab" onclick="openAdd()">+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅</div>
+
+<!-- ── HOME ── -->
+<div class="page on" id="p-home">
+  <div class="hero">
+    <h2 id="greet">नमस्कार! 🙏</h2>
+    <p id="dash-date">लोड होतेय...</p>
+    <div class="adviser-pill"><span id="dash-adviser">⚙️ Settings मध्ये नाव टाका</span></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="snum" id="s-total">0</div><div class="slbl">👥 एकूण Clients</div></div>
+    <div class="stat o"><div class="snum" id="s-month">0</div><div class="slbl">🔔 या महिन्यात Renewal</div></div>
+    <div class="stat r"><div class="snum" id="s-over">0</div><div class="slbl">⚠️ Overdue</div></div>
+    <div class="stat g"><div class="snum" id="s-active">0</div><div class="slbl">✅ Active Policies</div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🔔 Upcoming Renewals</div>
+    <div id="r-list"><div class="empty"><div class="ei">📅</div><p>अजून कोणताही client नाही</p></div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">⚡ Quick Actions</div>
+    <div class="qgrid">
+      <button class="qbtn" onclick="goTo('clients');setTimeout(openAdd,150)"><div class="qi">➕</div><span>New Client</span></button>
+      <button class="qbtn" onclick="goTo('msg')"><div class="qi">💬</div><span>Message</span></button>
+      <button class="qbtn" onclick="goTo('claim')"><div class="qi">📤</div><span>Claim</span></button>
+      <button class="qbtn" onclick="goTo('docs')"><div class="qi">📂</div><span>Documents</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CLIENTS ── -->
+<div class="page" id="p-clients">
+  <div id="cl-list"></div>
+</div>
+
+<!-- ── MESSAGES ── -->
+<div class="page" id="p-msg">
+  <div class="card" style="padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:13px;font-weight:700">🌐 भाषा</span>
+    <div style="display:flex;background:var(--bg);border-radius:9px;padding:3px;gap:3px">
+      <button id="lang-mr" onclick="setLang('marathi')" style="padding:6px 14px;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--navy);color:#fff">मराठी</button>
+      <button id="lang-en" onclick="setLang('english')" style="padding:6px 14px;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;background:transparent;color:var(--muted)">English</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Message प्रकार</div>
+    <div class="tabs">
+      <button class="tab on" onclick="mTab('renewal')">🔄 Renewal</button>
+      <button class="tab" onclick="mTab('claim')">📋 Claim</button>
+      <button class="tab" onclick="mTab('policy')">📄 Policy</button>
+    </div>
+    <div class="field"><label>👤 Client निवडा</label><select id="m-cl" onchange="autoFillMsg()"><option value="">-- Client निवडा --</option></select></div>
+    <div class="field"><label>👤 नाव <span class="req">*</span></label><input type="text" id="m-name" placeholder="Rajesh Sharma"></div>
+    <div class="fsec on" id="mf-renewal">
+      <div class="field"><label>🛡️ Policy प्रकार</label><select id="m-rtype"><option>Health Insurance</option><option>Motor Insurance – Car</option><option>Motor Insurance – Two Wheeler</option></select></div>
+      <div class="field"><label>📅 Renewal Date</label><input type="date" id="m-rdate"></div>
+      <div class="field"><label>💰 Premium (₹)</label><input type="number" id="m-rprem" placeholder="14200"></div>
+    </div>
+    <div class="fsec" id="mf-claim">
+      <div class="field"><label>📋 Claim Number</label><input type="text" id="m-cno" placeholder="NIA/2024/001234"></div>
+      <div class="field"><label>🔄 Status</label><select id="m-cstat"><option>Received</option><option>Under Process</option><option>Survey Scheduled</option><option>Approved ✅</option><option>Payment Processed</option><option>Documents Required</option></select></div>
+      <div class="field"><label>💬 Note</label><input type="text" id="m-cnote" placeholder="3-5 दिवसात payment"></div>
+    </div>
+    <div class="fsec" id="mf-policy">
+      <div class="field"><label>🛡️ Policy Type</label><select id="m-ptype"><option>Health Insurance</option><option>Motor Insurance</option></select></div>
+      <div class="field"><label>📋 Policy Number</label><input type="text" id="m-pno" placeholder="11010034230100001234"></div>
+      <div class="field"><label>📅 Valid Until</label><input type="date" id="m-pvalid"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px">
+      <button class="btn btn-outline" style="margin:0;font-size:13px" onclick="useTemplate()">📝 Ready Template</button>
+      <button class="btn btn-navy" style="margin:0;font-size:13px" onclick="genMsg()">✨ AI Message</button>
+    </div>
+  </div>
+  <div class="loader" id="m-load"><div class="spin"></div><p style="color:var(--muted);font-size:12px">AI message तयार करतोय...</p></div>
+  <div id="m-out" style="display:none">
+    <div class="card">
+      <div class="ctitle">तयार Message ✏️ Edit करा</div>
+      <textarea class="out-box" id="m-res" oninput="syncWa('m-res','m-wa')"></textarea>
+      <div class="abtn-row">
+        <button class="bcopy" id="m-cbtn" onclick="copyTxt('m-res','m-cbtn')">📋 Copy</button>
+        <a class="bwa" id="m-wa" href="#" target="_blank">💬 WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CLAIM ── -->
+<div class="page" id="p-claim">
+  <div class="ctabs">
+    <button class="ctab on" onclick="claimTab('intimate')" id="ctab-intimate">📤 Intimation</button>
+    <button class="ctab" onclick="claimTab('tpa')" id="ctab-tpa">🏥 TPA Contacts</button>
+    <button class="ctab" onclick="claimTab('steps')" id="ctab-steps">📋 Steps</button>
+  </div>
+
+  <!-- INTIMATION -->
+  <div id="csec-intimate">
+    <div class="card">
+      <div class="ctitle">📤 Claim Intimation</div>
+      <div class="tabs">
+        <button class="tab on" onclick="intimTab('health')">🏥 Health</button>
+        <button class="tab" onclick="intimTab('motor')">🚗 Motor</button>
+      </div>
+      <div class="field"><label>👤 Client निवडा</label><select id="int-cl" onchange="autoFillIntim()"><option value="">-- Client निवडा --</option></select></div>
+      <div class="field"><label>👤 नाव <span class="req">*</span></label><input type="text" id="int-name" placeholder="Rajesh Sharma"></div>
+      <div class="field"><label>📱 Mobile</label><input type="tel" id="int-phone" placeholder="9876543210"></div>
+      <div class="field"><label>📋 Policy Number</label><input type="text" id="int-polno" placeholder="11010034230100001234"></div>
+      <!-- Health -->
+      <div class="fsec on" id="if-health">
+        <div class="field"><label>🏥 Hospital नाव व पत्ता</label><input type="text" id="int-hosp" placeholder="Sahyadri Hospital, Pune"></div>
+        <div class="field"><label>📅 Admission Date</label><input type="date" id="int-admdate"></div>
+        <div class="field"><label>🤒 Diagnosis</label><input type="text" id="int-diag" placeholder="Fever, Surgery..."></div>
+        <div class="field"><label>💰 Estimated Amount (₹)</label><input type="number" id="int-amt" placeholder="50000"></div>
+        <div class="field"><label>🏥 TPA निवडा</label>
+          <select id="int-tpa-sel" onchange="updateTPAFields()">
+            <option value="Paramount Health Services|claims@paramounttpa.com|18001800224">Paramount Health Services</option>
+            <option value="Medi Assist India|support@mediassist.in|18004259449">Medi Assist India</option>
+            <option value="FHPL|fhplclaims@fhpl.net|18004254333">FHPL (Family Health Plan)</option>
+            <option value="Vipul Medcorp|claims@vipulmedcorp.com|18001034165">Vipul Medcorp</option>
+          </select>
+        </div>
+        <div class="field"><label>📧 TPA Email</label><input type="email" id="int-tpa-email" value="claims@paramounttpa.com"></div>
+        <div class="field"><label>📝 Extra Details</label><textarea id="int-note" placeholder="Additional info..."></textarea></div>
+      </div>
+      <!-- Motor -->
+      <div class="fsec" id="if-motor">
+        <div class="field"><label>🚗 Vehicle Number</label><input type="text" id="int-vehno" placeholder="MH12AB1234"></div>
+        <div class="field"><label>📅 Accident Date & Time</label><input type="datetime-local" id="int-accdate"></div>
+        <div class="field"><label>📍 Accident Location</label><input type="text" id="int-loc" placeholder="Pune-Mumbai Highway, Km 45"></div>
+        <div class="field"><label>💥 Nature of Loss</label><select id="int-loss"><option>Accidental Damage</option><option>Theft</option><option>Third Party Damage</option><option>Fire Damage</option><option>Flood Damage</option></select></div>
+        <div class="field"><label>🏥 Injuries</label><input type="text" id="int-inj" placeholder="No injuries"></div>
+        <div class="field"><label>🚔 FIR Number</label><input type="text" id="int-fir" placeholder="Not applicable"></div>
+        <div class="field"><label>🔧 Garage</label><input type="text" id="int-garage" placeholder="Authorized Service Center"></div>
+        <div class="field"><label>📝 Extra Details</label><textarea id="int-note2" placeholder="Additional info..."></textarea></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px">
+        <button class="btn btn-outline" style="margin:0;font-size:13px" onclick="genIntim('tmpl')">📝 Template</button>
+        <button class="btn btn-navy" style="margin:0;font-size:13px" onclick="genIntim('ai')">✨ AI Draft</button>
+      </div>
+    </div>
+    <div class="loader" id="int-load"><div class="spin"></div><p style="color:var(--muted);font-size:12px">Draft तयार करतोय...</p></div>
+    <div id="int-out" style="display:none">
+      <div class="card">
+        <div class="ctitle">📧 Intimation Draft ✏️ Edit करा</div>
+        <textarea class="out-box" id="int-res" style="min-height:220px" oninput="syncWa('int-res','int-wa')"></textarea>
+        <div class="abtn-row" style="margin-bottom:9px">
+          <button class="bcopy" id="int-cbtn" onclick="copyTxt('int-res','int-cbtn')">📋 Copy</button>
+          <a class="bwa" id="int-wa" href="#" target="_blank">💬 WhatsApp</a>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+          <a id="int-email-a" href="#" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:11px;font-size:12px;font-weight:700;color:#1E40AF;text-decoration:none">📧 Email पाठवा</a>
+          <button id="int-call-btn" onclick="callCurTPA()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:11px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit;width:100%;border:1.5px solid #BBF7D0;-webkit-appearance:none">📞 TPA Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TPA CONTACTS -->
+  <div id="csec-tpa" style="display:none">
+    <div class="card">
+      <div class="ctitle">🏥 TPA Contacts</div>
+      <div id="tpa-list-view"></div>
+      <button class="btn btn-outline" style="margin:8px 0 0" onclick="openTPAForm('tpa','')">➕ TPA Add / Edit</button>
+    </div>
+    <div class="card">
+      <div class="ctitle">🏛️ Office Contacts</div>
+      <div id="office-list-view"></div>
+      <button class="btn btn-outline" style="margin:8px 0 0" onclick="openTPAForm('office','')">➕ Office Contact Add</button>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div id="csec-steps" style="display:none">
+    <div class="card">
+      <div class="ctitle">Claim Type</div>
+      <div class="tabs">
+        <button class="tab on" onclick="cStepTab('health')">🏥 Health</button>
+        <button class="tab" onclick="cStepTab('motor')">🚗 Motor</button>
+      </div>
+      <div class="fsec on" id="cst-health">
+        <div class="cstep"><div class="cnum">1</div><div><h3>TPA ला Intimation द्या</h3><p>Admission नंतर 24 तासांत TPA helpline वर call करा.</p></div></div>
+        <div class="cstep"><div class="cnum">2</div><div><h3>TPA Card दाखवा</h3><p>Hospital मध्ये TPA card + Aadhar दाखवा.</p></div></div>
+        <div class="cstep"><div class="cnum">3</div><div><h3>Bills जपून ठेवा</h3><p>Original bills, discharge summary, reports सर्व जपून ठेवा.</p></div></div>
+        <div class="cstep"><div class="cnum">4</div><div><h3>Documents Submit करा</h3><p>Claim form + bills + reports Branch मध्ये submit करा.</p></div></div>
+        <div class="cstep"><div class="cnum">5</div><div><h3>Payment – 30 दिवस</h3><p>30 दिवसांत bank account मध्ये payment येते.</p></div></div>
+        <div class="helpline" onclick="window.open('tel:18002091415')"><div style="font-size:22px">📞</div><div><div style="font-size:14px;font-weight:700">1800-209-1415</div><div style="font-size:11px;opacity:.8">NIA 24×7 Free Helpline</div></div></div>
+      </div>
+      <div class="fsec" id="cst-motor">
+        <div class="cstep"><div class="cnum">1</div><div><h3>24 तासांत Intimation द्या</h3><p>Accident नंतर लगेच NIA helpline वर call करा.</p></div></div>
+        <div class="cstep"><div class="cnum">2</div><div><h3>FIR करा</h3><p>Third party / theft असल्यास police FIR mandatory.</p></div></div>
+        <div class="cstep"><div class="cnum">3</div><div><h3>Surveyor Inspection</h3><p>Company surveyor 24-48 तासांत inspect करेल.</p></div></div>
+        <div class="cstep"><div class="cnum">4</div><div><h3>Cashless Repair</h3><p>Approved garage मध्ये repair करा.</p></div></div>
+        <div class="helpline" onclick="window.open('tel:18002091415')"><div style="font-size:22px">📞</div><div><div style="font-size:14px;font-weight:700">1800-209-1415</div><div style="font-size:11px;opacity:.8">NIA 24×7 Free Helpline</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DOCUMENTS ── -->
+<div class="page" id="p-settings">
+  <div class="prof-hero">
+    <div class="prof-av" id="prof-av">👤</div>
+    <h2 id="prof-name" style="font-size:18px;font-weight:700">तुमचे नाव</h2>
+    <p id="prof-branch" style="font-size:12px;opacity:.75;margin-top:4px">New India Assurance</p>
+  </div>
+  <div class="card">
+    <div class="ctitle">👤 Adviser Profile</div>
+    <div class="field"><label>पूर्ण नाव</label><input type="text" id="set-name" placeholder="तुमचे नाव" oninput="liveProfile()"></div>
+    <div class="field"><label>📱 Mobile</label><input type="tel" id="set-mobile" placeholder="9876543210" oninput="liveProfile()"></div>
+    <div class="field"><label>🏛️ Branch</label><input type="text" id="set-branch" placeholder="Pune Branch" oninput="liveProfile()"></div>
+    <div class="field"><label>🆔 Agent Code</label><input type="text" id="set-agentcode" placeholder="NIA/AGENT/001"></div>
+    <div class="field"><label>📧 Email</label><input type="email" id="set-email" placeholder="adviser@newindia.co.in"></div>
+    <button class="btn btn-navy" onclick="saveProfile()">💾 Profile Save करा</button>
+  </div>
+  <div class="card">
+    <div class="ctitle">🌐 Default Language</div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button id="slmr" onclick="setDefLang('marathi')" style="flex:1;padding:12px;border:2px solid var(--blue);border-radius:11px;background:#EFF6FF;font-family:inherit;font-size:13px;font-weight:700;color:var(--blue);cursor:pointer;-webkit-appearance:none">🇮🇳 मराठी</button>
+      <button id="slen" onclick="setDefLang('english')" style="flex:1;padding:12px;border:2px solid var(--border);border-radius:11px;background:#fff;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;-webkit-appearance:none">🇬🇧 English</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📱 App Info</div>
+    <div class="drow"><span class="dlbl">App</span><span class="dval">PolicyPro Plus v5</span></div>
+    <div class="drow"><span class="dlbl">Company</span><span class="dval">New India Assurance</span></div>
+    <div class="drow"><span class="dlbl">Clients</span><span class="dval" id="set-cl-count">0</span></div>
+    <div class="drow"><span class="dlbl">Data</span><span class="dval">फक्त तुमच्या Phone मध्ये 🔒</span></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">⚠️ Data</div>
+    <button class="btn btn-outline" style="margin:0 0 10px" onclick="exportData()">📤 Backup Download करा</button>
+    <button class="btn btn-red" style="margin:0" onclick="clearData()">🗑️ सर्व Data Delete करा</button>
+  </div>
+</div>
+
+<!-- ADD/EDIT CLIENT MODAL -->
+<div class="overlay" id="ov-add">
+  <div class="mcard">
+    <div class="mtitle" id="add-title">➕ New Client</div>
+    <input type="hidden" id="edit-id">
+    <div class="ctitle">👤 Personal</div>
+    <div class="row2"><div class="field"><label>नाव <span class="req">*</span></label><input type="text" id="c-name" placeholder="Rajesh Sharma"></div><div class="field"><label>Mobile <span class="req">*</span></label><input type="tel" id="c-phone" placeholder="9876543210"></div></div>
+    <div class="row2"><div class="field"><label>वय</label><input type="number" id="c-age" placeholder="35"></div><div class="field"><label>शहर</label><input type="text" id="c-city" placeholder="Pune"></div></div>
+    <div class="field"><label>Email</label><input type="email" id="c-email" placeholder="email@gmail.com"></div>
+    <div class="ctitle" style="margin-top:8px">🛡️ Policy</div>
+    <div class="field"><label>Insurance प्रकार</label><select id="c-itype"><option value="">-- निवडा --</option><option value="Health">Health Insurance</option><option value="Car">Motor – Car</option><option value="Bike">Motor – Two Wheeler</option><option value="Health+Car">Health + Car</option><option value="Health+Bike">Health + Bike</option><option value="All">Health + Car + Bike</option></select></div>
+    <div class="field"><label>Policy Number</label><input type="text" id="c-polno" placeholder="11010034230100001234"></div>
+    <div class="row2"><div class="field"><label>Sum Insured</label><input type="text" id="c-sum" placeholder="5 Lakh"></div><div class="field"><label>Vehicle</label><input type="text" id="c-veh" placeholder="Swift 2022"></div></div>
+    <div class="row2"><div class="field"><label>Policy Start</label><input type="date" id="c-start"></div><div class="field"><label>Renewal Date <span class="req">*</span></label><input type="date" id="c-renew"></div></div>
+    <div class="ctitle" style="margin-top:8px">💰 Premium History</div>
+    <div id="ph-list"></div>
+    <div style="display:flex;gap:7px;margin-top:6px">
+      <input type="number" id="ph-yr" placeholder="Year (2025)" style="flex:1;padding:9px 11px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;outline:none;background:var(--bg)">
+      <input type="number" id="ph-amt" placeholder="Premium ₹" style="flex:1;padding:9px 11px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;outline:none;background:var(--bg)">
+      <button onclick="addPH()" style="padding:9px 13px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">+ Add</button>
+    </div>
+    <div class="ctitle" style="margin-top:10px">📄 PDF Links</div>
+    <div class="field"><label>Current Policy PDF</label><input type="url" id="c-pdf1" placeholder="Google Drive link"></div>
+    <div class="field"><label>मागील Policy PDF</label><input type="url" id="c-pdf2" placeholder="Google Drive link"></div>
+    <div class="row2"><div class="field"><label>🎂 Birthday</label><input type="date" id="c-bday"></div><div class="field"><label>💍 Anniversary</label><input type="date" id="c-anniv"></div></div>
+    <div class="field"><label>📝 Notes</label><textarea id="c-notes" placeholder="Extra माहिती..."></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <button class="btn btn-outline" style="margin:0" onclick="closeOv('ov-add')">रद्द करा</button>
+      <button class="btn btn-navy" style="margin:0" onclick="saveClient()">💾 Save करा</button>
+    </div>
+    <button class="xbtn" onclick="closeOv('ov-add')">✕</button>
+  </div>
+</div>
+
+<!-- CLIENT DETAIL MODAL -->
+<div class="overlay" id="ov-det">
+  <div class="mcard">
+    <div class="det-hdr">
+      <div class="det-av" id="det-av"></div>
+      <div><h2 id="det-nm" style="font-size:17px;font-weight:700"></h2><p id="det-sub" style="font-size:12px;color:var(--muted);margin-top:2px"></p></div>
+    </div>
+    <div id="det-body"></div>
+    <div id="det-pdf"></div>
+    <div id="det-ph"></div>
+    <div id="det-cal"></div>
+    <div class="det-acts">
+      <button class="act act-wa" onclick="waClient()">💬 WhatsApp</button>
+      <button class="act act-call" onclick="callClient()">📞 Call</button>
+      <button class="act act-edit" onclick="editClient()">✏️ Edit</button>
+      <button class="act act-del" onclick="delClient()">🗑️ Delete</button>
+    </div>
+    <button class="xbtn" onclick="closeOv('ov-det')">✕</button>
+  </div>
+</div>
+
+<!-- DOCUMENT DETAIL MODAL -->
+<div class="overlay" id="ov-doc">
+  <div class="mcard">
+    <div class="mtitle" id="doc-title"></div>
+    <div id="doc-body" style="font-size:13px;line-height:1.8;color:var(--navy)"></div>
+    <button class="btn btn-outline" style="margin-top:14px" onclick="closeOv('ov-doc')">बंद करा</button>
+    <button class="xbtn" onclick="closeOv('ov-doc')">✕</button>
+  </div>
+</div>
+
+<!-- TPA FORM MODAL -->
+<div class="overlay" id="ov-tpa">
+  <div class="mcard">
+    <div class="mtitle" id="tpa-form-title">➕ Contact Add करा</div>
+    <input type="hidden" id="tf-id">
+    <input type="hidden" id="tf-type" value="tpa">
+    <div class="field"><label>नाव <span class="req">*</span></label><input type="text" id="tf-name" placeholder="Paramount Health Services"></div>
+    <div class="field"><label>📞 Phone</label><input type="tel" id="tf-phone" placeholder="1800-1800-2243"></div>
+    <div class="field"><label>📧 Email</label><input type="email" id="tf-email" placeholder="claims@tpa.com"></div>
+    <div class="field"><label>🌐 Website</label><input type="text" id="tf-web" placeholder="www.tpa.com"></div>
+    <div class="field"><label>📝 Notes</label><input type="text" id="tf-note" placeholder="Cashless, Reimbursement..."></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <button class="btn btn-outline" style="margin:0" onclick="closeOv('ov-tpa')">रद्द करा</button>
+      <button class="btn btn-navy" style="margin:0" onclick="saveTPAContact()">💾 Save करा</button>
+    </div>
+    <button class="xbtn" onclick="closeOv('ov-tpa')">✕</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="page" id="p-growth"><div id="g-tb" class="tabs" style="margin-bottom:12px"><button class="tab on" onclick="gT(0)">📞 Reminders</button><button class="tab" onclick="gT(1)">🎂 Birthday</button><button class="tab" onclick="gT(2)">📱 Bulk</button></div><div id="g0"><div class="card"><div class="ctitle">📞 Reminders</div><div id="rem-list"></div><button class="btn btn-outline" style="margin-top:8px" onclick="openRemModal()">➕ नवीन</button></div><div class="card"><div class="ctitle">⏰ Renewal Alerts</div><div id="ren-list"></div></div></div><div id="g1" style="display:none"><div class="card"><div class="ctitle">🎂 Birthdays</div><div id="bday-list"></div></div><div class="card"><div class="ctitle">💍 Anniversaries</div><div id="anniv-list"></div></div></div><div id="g2" style="display:none"><div class="card"><div class="ctitle">📱 Bulk WhatsApp</div><div id="bk-tb" class="tabs"><button class="tab on" onclick="bkT(0)">🔄 Renewal</button><button class="tab" onclick="bkT(1)">👥 सर्व</button></div><div class="field" style="margin-top:8px"><label>Message ({नाव})</label><textarea id="bk-msg" style="min-height:75px"></textarea></div><div id="bk-list" style="max-height:140px;overflow-y:auto;margin:7px 0"></div><button class="btn btn-navy" onclick="sendBulk()">💬 पाठवा</button></div></div></div>
+<div class="page" id="p-analytics"><div id="a-tb" class="tabs" style="margin-bottom:12px"><button class="tab on" onclick="aT(0)">📈 Premium</button><button class="tab" onclick="aT(1)">🏆 Top</button><button class="tab" onclick="aT(2)">📋 Quote</button><button class="tab" onclick="aT(3)">🤖 AI</button></div><div id="a0"><div class="card"><div class="ctitle">📈 Premium</div><div id="pc"></div></div><div style="background:linear-gradient(135deg,#0A1628,#1E40AF);border-radius:14px;padding:13px;color:#fff;margin-bottom:12px;font-size:13px"><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.15)"><span>एकूण</span><b id="st"></b></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.15)"><span>या वर्षी</span><b id="sy"></b></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.15)"><span>Commission</span><b id="sc"></b></div><div style="display:flex;justify-content:space-between;padding:4px 0"><span>Clients</span><b id="sn"></b></div></div></div><div id="a1" style="display:none"><div class="card"><div class="ctitle">🏆 Top Clients</div><div id="tl"></div></div></div><div id="a2" style="display:none"><div class="card"><div class="ctitle">📋 Quote</div><div id="q-tb" class="tabs"><button class="tab on" onclick="qT(0)">🏥 Health</button><button class="tab" onclick="qT(1)">🚗 Motor</button></div><div id="qh"><div class="field"><label>वय</label><input type="number" id="qa" placeholder="35"></div><div class="field"><label>Family</label><select id="qf"><option value="1">Self</option><option value="2">+Spouse</option><option value="3" selected>+1Child</option><option value="4">+2Children</option><option value="5">+Parents</option></select></div><div class="field"><label>Sum</label><select id="qs"><option value="300000">3L</option><option value="500000" selected>5L</option><option value="1000000">10L</option><option value="2000000">20L</option></select></div><button class="btn btn-navy" onclick="cQ(0)">Calculate</button></div><div id="qm" style="display:none"><div class="field"><label>Vehicle</label><select id="qv"><option value="car">Car</option><option value="bike">Bike</option></select></div><div class="field"><label>वर्ष</label><input type="number" id="qy" placeholder="2022"></div><div class="field"><label>IDV</label><input type="number" id="qi" placeholder="500000"></div><div class="field"><label>NCB</label><select id="qn"><option value="0">0%</option><option value="20">20%</option><option value="25">25%</option><option value="35">35%</option><option value="45">45%</option><option value="50">50%</option></select></div><button class="btn btn-navy" onclick="cQ(1)">Calculate</button></div><div id="qr"></div></div></div><div id="a3" style="display:none"><div class="card"><div class="ctitle">🤖 AI Chat</div><div id="cb" style="background:var(--bg);border-radius:12px;padding:10px;min-height:120px;max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;margin-bottom:8px"><div style="padding:8px 11px;border-radius:11px;font-size:13px;background:#fff;color:var(--navy)">Insurance प्रश्न विचारा!</div></div><div style="display:flex;gap:7px"><input type="text" id="ci" placeholder="प्रश्न..." onkeydown="if(event.key==='Enter')dC()" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;outline:none"><button onclick="dC()" style="padding:9px 13px;background:var(--navy);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:15px">➤</button></div></div></div></div>
+<div class="overlay" id="ov-rem"><div class="mcard"><div class="mtitle">📞 Reminder</div><div class="field"><label>Client</label><select id="rc"></select></div><div class="field"><label>Reason</label><select id="rr"><option>Renewal Follow-up</option><option>Claim Follow-up</option><option>New Policy</option><option>Premium Payment</option><option>Other</option></select></div><div class="field"><label>Date</label><input type="date" id="rd"></div><div class="field"><label>Note</label><input type="text" id="rn"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><button class="btn btn-outline" style="margin:0" onclick="closeOv('ov-rem')">रद्द</button><button class="btn btn-navy" style="margin:0" onclick="saveRem()">Save</button></div><button class="xbtn" onclick="closeOv('ov-rem')">✕</button></div></div>
+<div class="bnav">
+  <button class="nb on" id="nb-home" onclick="goTo('home')"><span class="ni">🏠</span>Home</button>
+  <button class="nb" id="nb-clients" onclick="goTo('clients')"><span class="ni">👥</span>Clients</button>
+  <button class="nb" id="nb-msg" onclick="goTo('msg')"><span class="ni">💬</span>Message</button>
+  <button class="nb" id="nb-claim" onclick="goTo('claim')"><span class="ni">📤</span>Claim</button>
+  <button class="nb" id="nb-growth" onclick="goTo('growth')"><span class="ni">📞</span>Growth</button>
+  <button class="nb" id="nb-analytics" onclick="goTo('analytics')"><span class="ni">📊</span>Analytics</button>
+  <button class="nb" id="nb-settings" onclick="goTo('settings')"><span class="ni">⚙️</span>Settings</button>
+</div>
+
+<script>
+// ════ DATA ════
+var DB={
+  get:function(){
+    try{
+      // Try v5 first
+      var v5=JSON.parse(localStorage.getItem('pp_v5')||'[]');
+      if(v5.length)return v5;
+      // Migrate from v4/v3
+      var old=JSON.parse(localStorage.getItem('pp_v3')||localStorage.getItem('pp_v4')||'[]');
+      if(old.length){localStorage.setItem('pp_v5',JSON.stringify(old));return old;}
+      return[];
+    }catch{return[];}
+  },
+  save:function(a){localStorage.setItem('pp_v5',JSON.stringify(a));},
+  id:function(){return 'c'+Date.now();}
+};
+var appLang='marathi';
+var curTPAPhone='18001800224';
+var curId=null;
+var phTemp=[];
+
+// ════ INIT ════
+window.onload=function(){
+  loadProfile();
+  var now=new Date();
+  var days=['रविवार','सोमवार','मंगळवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
+  var months=['जानेवारी','फेब्रुवारी','मार्च','एप्रिल','मे','जून','जुलै','ऑगस्ट','सप्टेंबर','ऑक्टोबर','नोव्हेंबर','डिसेंबर'];
+  var h=now.getHours();
+  document.getElementById('greet').textContent=h<12?'सुप्रभात! 🌅':h<17?'नमस्कार! 🙏':'शुभ संध्या! 🌆';
+  document.getElementById('dash-date').textContent=days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+  var d=new Date();d.setDate(d.getDate()+30);
+  document.getElementById('m-rdate').value=d.toISOString().split('T')[0];
+  var pd=new Date();pd.setFullYear(pd.getFullYear()+1);
+  document.getElementById('m-pvalid').value=pd.toISOString().split('T')[0];
+  renderDash();fillDropdowns();
+};
+
+// ════ NAV ════
+var pageMeta={
+  home:['Dashboard','आजचा आढावा'],
+  clients:['Clients','सर्व clients'],
+  msg:['Follow-up Messages','Renewal • Claim • Policy'],
+  claim:['Claim','Intimation • TPA • Steps'],
+  docs:['Documents','Forms, Contacts, Checklists'],
+  settings:['Settings','Profile, Language, App Info'],growth:['Growth','Reminders • Birthday • Bulk'],analytics:['Analytics','Premium • Top • Quote • AI']
+};
+function goTo(p){
+  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(x){x.classList.remove('on');});
+  var pg=document.getElementById('p-'+p);
+  if(pg)pg.classList.add('on');
+  var nb=document.getElementById('nb-'+p);
+  if(nb)nb.classList.add('on');
+  var m=pageMeta[p]||[p,''];
+  document.getElementById('ptitle').textContent=m[0];
+  document.getElementById('psub').textContent=m[1];
+  document.getElementById('srchWrap').classList.remove('show');
+  var fab=document.getElementById('fab');
+  fab.className='fab'+(p==='clients'?' show':'');
+  window.scrollTo(0,0);
+  if(p==='home')renderDash();
+  if(p==='clients')renderClients();
+  if(p==='msg')fillDropdowns();
+  if(p==='claim'){fillIntimDropdown();}
+  if(p==='settings')loadProfile();
+  if(p==='growth'){renderGrowth();}
+  if(p==='analytics'){renderAnalytics();}
+}
+
+// ════ TOAST ════
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  setTimeout(function(){t.style.display='none';},2500);
+}
+
+// ════ SEARCH ════
+function toggleSearch(){
+  var w=document.getElementById('srchWrap');
+  w.classList.toggle('show');
+  if(w.classList.contains('show'))document.getElementById('srchInput').focus();
+}
+function liveSearch(){renderClients(document.getElementById('srchInput').value.toLowerCase());}
+
+// ════ DASHBOARD ════
+function renderDash(){
+  var cl=DB.get();
+  var today=new Date();today.setHours(0,0,0,0);
+  var month=0,over=0,items=[];
+  cl.forEach(function(c){
+    if(!c.renew)return;
+    var rd=new Date(c.renew);rd.setHours(0,0,0,0);
+    var diff=Math.round((rd-today)/864e5);
+    if(diff<0){over++;items.push({c:c,diff:diff,t:'danger'});}
+    else if(diff<=30){month++;items.push({c:c,diff:diff,t:diff<=7?'warn':'ok'});}
+  });
+  document.getElementById('s-total').textContent=cl.length;
+  document.getElementById('s-month').textContent=month;
+  document.getElementById('s-over').textContent=over;
+  document.getElementById('s-active').textContent=cl.filter(function(c){return c.renew&&new Date(c.renew)>=today;}).length;
+  var rl=document.getElementById('r-list');
+  if(!items.length){rl.innerHTML='<div class="empty"><div class="ei">🎉</div><p>पुढील 30 दिवसांत कोणताही renewal नाही</p></div>';return;}
+  items.sort(function(a,b){return a.diff-b.diff;});
+  rl.innerHTML=items.map(function(it){
+    var c=it.c,diff=it.diff,t=it.t;
+    return '<div class="ral '+t+'"><div class="ral-ico">'+(t==='danger'?'🚨':t==='warn'?'⏰':'✅')+'</div><div><h3>'+c.name+'</h3><p>'+(c.itype||'Policy')+' • '+(t==='danger'?Math.abs(diff)+' दिवस overdue':diff===0?'आज!':diff+' दिवसांत')+'</p></div><div class="ral-btns"><button class="ral-s" onclick="quickSend(\''+c.id+'\')">💬 Send</button><button class="ral-c" onclick="addToCalendar(\''+c.id+'\')">📅 Cal</button></div></div>';
+  }).join('');
+}
+function quickSend(id){goTo('msg');setTimeout(function(){document.getElementById('m-cl').value=id;autoFillMsg();},200);}
+
+// ════ CLIENTS ════
+var avC=['av1','av2','av3','av4','av5','av6'];
+function renderClients(q){
+  q=q||'';
+  var cl=DB.get();
+  if(q)cl=cl.filter(function(c){return c.name.toLowerCase().indexOf(q)>=0||(c.phone||'').indexOf(q)>=0;});
+  var box=document.getElementById('cl-list');
+  var all=DB.get();
+  var today=new Date();today.setHours(0,0,0,0);
+  if(!cl.length){box.innerHTML='<div class="empty"><div class="ei">'+(q?'🔍':'👥')+'</div><h3>'+(q?'सापडले नाही':'अजून client नाही')+'</h3>'+(q?'':'<p>+ दाबून add करा!</p>')+'</div>';return;}
+  box.innerHTML=cl.map(function(c){
+    var i=all.findIndex(function(x){return x.id===c.id;});
+    var rd=c.renew?new Date(c.renew):null;
+    var diff=rd?Math.round((rd-today)/864e5):999;
+    var ini=c.name.split(' ').map(function(w){return w[0];}).join('').substr(0,2).toUpperCase();
+    var dtag='';
+    if(rd){if(diff<0)dtag='<span class="tag tr">⚠️ '+Math.abs(diff)+'d overdue</span>';else if(diff===0)dtag='<span class="tag tr">🔴 आज!</span>';else if(diff<=7)dtag='<span class="tag to">⏰ '+diff+'d</span>';else dtag='<span class="tag tg">📅 '+diff+'d</span>';}
+    var tm={Health:'th',Car:'tc',Bike:'tb','Health+Car':'tm','Health+Bike':'tm',All:'tm'};
+    return '<div class="cl'+(diff<=7?' urg':'')+'" onclick="showDet(\''+c.id+'\')"><div class="av '+avC[i%6]+'">'+ini+'</div><div class="cl-info"><h3>'+c.name+'</h3><p>📱 '+c.phone+(c.city?' • '+c.city:'')+'</p><div class="cl-tags">'+(c.itype?'<span class="tag '+(tm[c.itype]||'th')+'">'+c.itype+'</span>':'')+dtag+'</div></div></div>';
+  }).join('');
+}
+
+// ════ CLIENT DETAIL ════
+function showDet(id){
+  var c=DB.get().find(function(x){return x.id===id;});if(!c)return;
+  curId=id;
+  var all=DB.get();var i=all.findIndex(function(x){return x.id===id;});
+  var ini=c.name.split(' ').map(function(w){return w[0];}).join('').substr(0,2).toUpperCase();
+  var detAv=document.getElementById('det-av');
+  detAv.className='det-av '+avC[i%6];detAv.textContent=ini;
+  document.getElementById('det-nm').textContent=c.name;
+  document.getElementById('det-sub').textContent='📱 '+c.phone+(c.city?' • '+c.city:'');
+  var fmt=function(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';};
+  document.getElementById('det-body').innerHTML='<div class="drow"><span class="dlbl">🛡️ Insurance</span><span class="dval">'+(c.itype||'—')+'</span></div><div class="drow"><span class="dlbl">📋 Policy No</span><span class="dval">'+(c.polno||'—')+'</span></div><div class="drow"><span class="dlbl">💰 Sum Insured</span><span class="dval">'+(c.sum||'—')+'</span></div><div class="drow"><span class="dlbl">📅 Start</span><span class="dval">'+fmt(c.start)+'</span></div><div class="drow"><span class="dlbl">🔔 Renewal</span><span class="dval">'+fmt(c.renew)+'</span></div>'+(c.veh?'<div class="drow"><span class="dlbl">🚗 Vehicle</span><span class="dval">'+c.veh+'</span></div>':'')+(c.notes?'<div class="drow"><span class="dlbl">📝 Notes</span><span class="dval">'+c.notes+'</span></div>':'');
+  var pdfs=[{l:'📄 Current Policy',u:c.pdf1},{l:'📄 मागील Policy',u:c.pdf2}].filter(function(p){return p.u;});
+  document.getElementById('det-pdf').innerHTML=pdfs.length?'<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">'+pdfs.map(function(p){return '<a href="'+p.u+'" target="_blank" class="pdf-link"><span style="font-size:22px">📄</span><span>'+p.l+'</span><span>↗️</span></a>';}).join('')+'</div>':'';
+  var ph=c.premHistory||[];
+  document.getElementById('det-ph').innerHTML=ph.length?'<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)"><div class="ctitle" style="margin-bottom:8px">💰 Premium History</div>'+(function(){var max=Math.max.apply(null,ph.map(function(p){return p.amt;}));return ph.sort(function(a,b){return a.yr-b.yr;}).map(function(p){return '<div class="ph-row"><div class="ph-yr">'+p.yr+'</div><div class="ph-bar-wrap"><div class="ph-bar" style="width:'+Math.round(p.amt/max*100)+'%"></div></div><div class="ph-amt">₹'+Number(p.amt).toLocaleString('en-IN')+'</div></div>';}).join('');})()+'</div>':'';
+  document.getElementById('det-cal').innerHTML=c.renew?'<button class="cal-btn" onclick="addToCalendar(\''+c.id+'\')">📅 Google Calendar मध्ये Renewal Reminder Add करा</button>':'';
+  openOv('ov-det');
+}
+function callClient(){var c=DB.get().find(function(x){return x.id===curId;});if(c)window.open('tel:'+c.phone);}
+function waClient(){var c=DB.get().find(function(x){return x.id===curId;});if(c)window.open('https://wa.me/91'+c.phone,'_blank');}
+function editClient(){closeOv('ov-det');openAdd(curId);}
+function delClient(){var c=DB.get().find(function(x){return x.id===curId;});if(!confirm((c?c.name:'Client')+' delete करायचे?'))return;DB.save(DB.get().filter(function(x){return x.id!==curId;}));closeOv('ov-det');renderClients();renderDash();fillDropdowns();showToast('🗑️ Client deleted');}
+
+// ════ ADD/EDIT CLIENT ════
+function openAdd(editId){
+  phTemp=[];
+  ['c-name','c-phone','c-age','c-city','c-email','c-polno','c-sum','c-veh','c-start','c-renew','c-notes','c-pdf1','c-pdf2','c-bday','c-anniv','ph-yr','ph-amt'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('c-itype').value='';
+  document.getElementById('edit-id').value=editId||'';
+  document.getElementById('add-title').textContent=editId?'✏️ Client Edit':'➕ New Client';
+  if(editId){
+    var c=DB.get().find(function(x){return x.id===editId;});
+    if(c){
+      var map={'c-name':'name','c-phone':'phone','c-age':'age','c-city':'city','c-email':'email','c-polno':'polno','c-sum':'sum','c-veh':'veh','c-notes':'notes','c-pdf1':'pdf1','c-pdf2':'pdf2'};
+      Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)el.value=c[map[id]]||'';});
+      document.getElementById('c-itype').value=c.itype||'';
+      document.getElementById('c-bday').value=c.bday||'';
+      document.getElementById('c-anniv').value=c.anniv||'';
+      document.getElementById('c-start').value=c.start||'';
+      document.getElementById('c-renew').value=c.renew||'';
+      phTemp=c.premHistory?c.premHistory.slice():[];
+    }
+  }
+  renderPH();openOv('ov-add');
+}
+function addPH(){var yr=parseInt(document.getElementById('ph-yr').value);var amt=parseInt(document.getElementById('ph-amt').value);if(!yr||!amt){alert('Year आणि Amount टाका');return;}phTemp=phTemp.filter(function(p){return p.yr!==yr;});phTemp.push({yr:yr,amt:amt});phTemp.sort(function(a,b){return a.yr-b.yr;});document.getElementById('ph-yr').value='';document.getElementById('ph-amt').value='';renderPH();}
+function renderPH(){var box=document.getElementById('ph-list');if(!phTemp.length){box.innerHTML='<p style="font-size:12px;color:var(--muted);padding:4px 0">Premium add करा.</p>';return;}var max=Math.max.apply(null,phTemp.map(function(p){return p.amt;}));box.innerHTML=phTemp.map(function(p,i){return '<div class="ph-row"><div class="ph-yr">'+p.yr+'</div><div class="ph-bar-wrap"><div class="ph-bar" style="width:'+Math.round(p.amt/max*100)+'%"></div></div><div class="ph-amt">₹'+Number(p.amt).toLocaleString('en-IN')+'</div><button onclick="phTemp.splice('+i+',1);renderPH()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0 4px">✕</button></div>';}).join('');}
+function saveClient(){
+  var name=document.getElementById('c-name').value.trim();var phone=document.getElementById('c-phone').value.trim();
+  if(!name){alert('नाव आवश्यक आहे');return;}if(!phone){alert('Mobile आवश्यक आहे');return;}
+  var editId=document.getElementById('edit-id').value;
+  var clients=DB.get();
+  var data={id:editId||DB.id(),name:name,phone:phone,age:document.getElementById('c-age').value,city:document.getElementById('c-city').value,email:document.getElementById('c-email').value,itype:document.getElementById('c-itype').value,polno:document.getElementById('c-polno').value,sum:document.getElementById('c-sum').value,veh:document.getElementById('c-veh').value,start:document.getElementById('c-start').value,renew:document.getElementById('c-renew').value,notes:document.getElementById('c-notes').value,bday:document.getElementById('c-bday').value,anniv:document.getElementById('c-anniv').value,pdf1:document.getElementById('c-pdf1').value,pdf2:document.getElementById('c-pdf2').value,premHistory:phTemp.slice()};
+  if(editId){var i=clients.findIndex(function(x){return x.id===editId;});if(i>=0)clients[i]=data;}else{clients.unshift(data);}
+  DB.save(clients);closeOv('ov-add');renderClients();renderDash();fillDropdowns();
+  showToast(editId?'✅ Client Updated!':'✅ Client Saved!');
+}
+
+// ════ DROPDOWNS ════
+function fillDropdowns(){
+  var cl=DB.get();
+  var opts='<option value="">-- Client निवडा --</option>'+cl.map(function(c){return '<option value="'+c.id+'">'+c.name+' – '+c.phone+'</option>';}).join('');
+  document.getElementById('m-cl').innerHTML=opts;
+  fillIntimDropdown();
+}
+function fillIntimDropdown(){
+  var cl=DB.get();
+  var sel=document.getElementById('int-cl');if(!sel)return;
+  sel.innerHTML='<option value="">-- Client निवडा --</option>'+cl.map(function(c){return '<option value="'+c.id+'">'+c.name+' – '+c.phone+'</option>';}).join('');
+}
+
+// ════ MESSAGE TABS ════
+function mTab(t){
+  ['renewal','claim','policy'].forEach(function(x,i){
+    document.querySelectorAll('#p-msg .tab')[i].classList.toggle('on',x===t);
+    document.getElementById('mf-'+x).classList.toggle('on',x===t);
+  });
+  document.getElementById('m-out').style.display='none';
+}
+function setLang(l){
+  appLang=l;
+  var mr=l==='marathi';
+  var lmr=document.getElementById('lang-mr');var len=document.getElementById('lang-en');
+  if(lmr){lmr.style.background=mr?'var(--navy)':'transparent';lmr.style.color=mr?'#fff':'var(--muted)';}
+  if(len){len.style.background=!mr?'var(--navy)':'transparent';len.style.color=!mr?'#fff':'var(--muted)';}
+  var smr=document.getElementById('slmr');var sen=document.getElementById('slen');
+  if(smr){smr.style.borderColor=mr?'var(--blue)':'var(--border)';smr.style.background=mr?'#EFF6FF':'#fff';smr.style.color=mr?'var(--blue)':'var(--muted)';}
+  if(sen){sen.style.borderColor=!mr?'var(--blue)':'var(--border)';sen.style.background=!mr?'#EFF6FF':'#fff';sen.style.color=!mr?'var(--blue)':'var(--muted)';}
+  var p=JSON.parse(localStorage.getItem('pp_profile')||'{}');p.lang=l;localStorage.setItem('pp_profile',JSON.stringify(p));
+}
+function setDefLang(l){setLang(l);showToast(l==='marathi'?'Default: मराठी ✅':'Default: English ✅');}
+function autoFillMsg(){
+  var id=document.getElementById('m-cl').value;if(!id)return;
+  var c=DB.get().find(function(x){return x.id===id;});if(!c)return;
+  document.getElementById('m-name').value=c.name;
+  if(c.renew)document.getElementById('m-rdate').value=c.renew;
+  if(c.premHistory&&c.premHistory.length)document.getElementById('m-rprem').value=c.premHistory.sort(function(a,b){return b.yr-a.yr;})[0].amt;
+  if(c.itype){var s=document.getElementById('m-rtype');if(c.itype==='Health')s.value='Health Insurance';else if(c.itype==='Car')s.value='Motor Insurance – Car';else if(c.itype==='Bike')s.value='Motor Insurance – Two Wheeler';}
+}
+function getSign(eng){
+  var p=JSON.parse(localStorage.getItem('pp_profile')||'{}');
+  return eng?'Your Insurance Adviser'+(p.name?'\n'+p.name:'')+(p.mobile?'\n📱 '+p.mobile:'')+(p.branch?'\n'+p.branch:'')+'\nNew India Assurance Co. Ltd. 🏛️':'तुमचा विमा सल्लागार'+(p.name?'\n'+p.name:'')+(p.mobile?'\n📱 '+p.mobile:'')+(p.branch?'\n'+p.branch:'')+'\nNew India Assurance Co. Ltd. 🏛️';
+}
+function useTemplate(){
+  var name=document.getElementById('m-name').value.trim();if(!name){alert('नाव टाका');return;}
+  var eng=appLang==='english';var sign=getSign(eng);
+  var tabEl=document.querySelector('#p-msg .tab.on');var tab=tabEl?tabEl.textContent:'';
+  tab=tab.indexOf('Renewal')>=0?'renewal':tab.indexOf('Claim')>=0?'claim':'policy';
+  var res='';
+  if(tab==='renewal'){
+    var date=document.getElementById('m-rdate').value;var prem=document.getElementById('m-rprem').value;
+    if(!date||!prem){alert('Date आणि Premium टाका');return;}
+    var fd=new Date(date).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+    var pf='₹'+Number(prem).toLocaleString('en-IN');var pt=document.getElementById('m-rtype').value;
+    res=eng?'Dear '+name+',\n\nGreetings from New India Assurance! 🙏\n\nYour insurance policy renewal is approaching.\n\n🛡️ Policy: '+pt+'\n📅 Renewal Date: '+fd+'\n💰 Premium: '+pf+'\n\nPlease renew on time to avoid lapse in coverage.\nFor any queries, feel free to call. 😊\n\n'+sign:'नमस्कार '+name+' जी! 🙏\n\nNew India Assurance कडून विनम्र अभिवादन!\n\nआपल्या policy चे renewal येत आहे.\n\n🛡️ Policy: '+pt+'\n📅 Renewal तारीख: '+fd+'\n💰 Premium: '+pf+'\n\nवेळेत renewal केल्यास coverage सुरळीत राहते.\nCall करा. 😊\n\n'+sign;
+  }else if(tab==='claim'){
+    var cno=document.getElementById('m-cno').value;if(!cno){alert('Claim Number टाका');return;}
+    var cstat=document.getElementById('m-cstat').value;var cnote=document.getElementById('m-cnote').value;
+    res=eng?'Dear '+name+',\n\nClaim Update 📋\n\n🔢 Claim No: '+cno+'\n🔄 Status: '+cstat+(cnote?'\n📝 Note: '+cnote:'')+'\n\nFor any queries, call us.\n\n'+sign:'नमस्कार '+name+' जी! 🙏\n\nClaim Update 📋\n\n🔢 Claim No: '+cno+'\n🔄 Status: '+cstat+(cnote?'\n📝 Note: '+cnote:'')+'\n\nCall करा. 😊\n\n'+sign;
+  }else{
+    var pno=document.getElementById('m-pno').value;if(!pno){alert('Policy Number टाका');return;}
+    var valid=document.getElementById('m-pvalid').value;var vd=valid?new Date(valid).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'—';
+    res=eng?'Dear '+name+',\n\nYour Policy Document 📄\n\n🛡️ Policy: '+document.getElementById('m-ptype').value+'\n📋 Policy No: '+pno+'\n📅 Valid Until: '+vd+'\n\nPlease keep this document safe.\n\n'+sign:'नमस्कार '+name+' जी! 🙏\n\nतुमची Policy Document 📄\n\n🛡️ Policy: '+document.getElementById('m-ptype').value+'\n📋 Policy No: '+pno+'\n📅 Valid: '+vd+'\n\nDocument जपून ठेवा. 😊\n\n'+sign;
+  }
+  document.getElementById('m-res').value=res;
+  document.getElementById('m-wa').href='https://wa.me/?text='+encodeURIComponent(res);
+  document.getElementById('m-out').style.display='block';
+  document.getElementById('m-out').scrollIntoView({behavior:'smooth'});
+}
+async function genMsg(){
+  var name=document.getElementById('m-name').value.trim();if(!name){alert('नाव टाका');return;}
+  var eng=appLang==='english';var sign=getSign(eng);
+  var tabEl=document.querySelector('#p-msg .tab.on');var tab=tabEl?tabEl.textContent:'';
+  tab=tab.indexOf('Renewal')>=0?'renewal':tab.indexOf('Claim')>=0?'claim':'policy';
+  var d='Client: '+name+' | ';
+  if(tab==='renewal'){var date=document.getElementById('m-rdate').value;var prem=document.getElementById('m-rprem').value;if(!date||!prem){alert('Date आणि Premium टाका');return;}d+='Policy: '+document.getElementById('m-rtype').value+' | Date: '+new Date(date).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' | Premium: ₹'+Number(prem).toLocaleString('en-IN');}
+  else if(tab==='claim'){var cno=document.getElementById('m-cno').value;if(!cno){alert('Claim Number टाका');return;}d+='Claim: '+cno+' | Status: '+document.getElementById('m-cstat').value+' | Note: '+(document.getElementById('m-cnote').value||'—');}
+  else{var pno=document.getElementById('m-pno').value;if(!pno){alert('Policy Number टाका');return;}d+='Policy: '+document.getElementById('m-ptype').value+' | No: '+pno;}
+  document.getElementById('m-load').style.display='block';document.getElementById('m-out').style.display='none';
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Write WhatsApp message in '+(eng?'English':'Marathi with English mix')+' for insurance adviser. Show policy details on separate lines with emojis. 8 lines max. No markdown. End with: '+sign+'. Details: '+d}]})});
+    var data=await r.json();
+    document.getElementById('m-load').style.display='none';
+    var res=data.content&&data.content[0]?data.content[0].text:null;
+    if(res){document.getElementById('m-res').value=res;document.getElementById('m-wa').href='https://wa.me/?text='+encodeURIComponent(res);document.getElementById('m-out').style.display='block';document.getElementById('m-out').scrollIntoView({behavior:'smooth'});}
+    else useTemplate();
+  }catch(e){document.getElementById('m-load').style.display='none';useTemplate();}
+}
+
+// ════ SYNC ════
+function syncWa(rid,wid){var t=document.getElementById(rid).value;var w=document.getElementById(wid);if(w)w.href='https://wa.me/?text='+encodeURIComponent(t);}
+function copyTxt(rid,bid){
+  var t=document.getElementById(rid).value;
+  navigator.clipboard.writeText(t).then(function(){var b=document.getElementById(bid);b.textContent='✅ Copy झाले!';b.classList.add('done');setTimeout(function(){b.textContent='📋 Copy';b.classList.remove('done');},2500);});
+}
+
+// ════ CLAIM PAGE ════
+var intimType='health';
+function claimTab(tab){
+  ['intimate','tpa','steps'].forEach(function(t){
+    document.getElementById('csec-'+t).style.display=t===tab?'block':'none';
+    var btn=document.getElementById('ctab-'+t);btn.classList.toggle('on',t===tab);
+  });
+  if(tab==='tpa')renderTPAContacts();
+}
+function intimTab(tab){
+  intimType=tab;
+  ['health','motor'].forEach(function(t,i){
+    document.querySelectorAll('#p-claim .tab')[i].classList.toggle('on',t===tab);
+    document.getElementById('if-'+t).classList.toggle('on',t===tab);
+  });
+}
+function cStepTab(tab){
+  ['health','motor'].forEach(function(t,i){
+    document.querySelectorAll('#csec-steps .tab')[i].classList.toggle('on',t===tab);
+    document.getElementById('cst-'+t).classList.toggle('on',t===tab);
+  });
+}
+function autoFillIntim(){
+  var id=document.getElementById('int-cl').value;if(!id)return;
+  var c=DB.get().find(function(x){return x.id===id;});if(!c)return;
+  document.getElementById('int-name').value=c.name||'';
+  document.getElementById('int-phone').value=c.phone||'';
+  document.getElementById('int-polno').value=c.polno||'';
+  if(c.veh)document.getElementById('int-vehno').value=c.veh;
+}
+function updateTPAFields(){
+  var sel=document.getElementById('int-tpa-sel');if(!sel)return;
+  var parts=sel.value.split('|');
+  curTPAPhone=parts[2]||'18002091415';
+  document.getElementById('int-tpa-email').value=parts[1]||'';
+}
+function callCurTPA(){window.open('tel:'+curTPAPhone,'_blank');}
+function genIntim(mode){
+  var name=document.getElementById('int-name').value.trim();if(!name){alert('नाव टाका');return;}
+  var eng=appLang==='english';var sign=getSign(eng);
+  var polno=document.getElementById('int-polno').value||'—';
+  var phone=document.getElementById('int-phone').value||'—';
+  var res='';
+  if(intimType==='health'){
+    var hosp=document.getElementById('int-hosp').value||'—';
+    var admdate=document.getElementById('int-admdate').value;
+    var fd=admdate?new Date(admdate).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'—';
+    var diag=document.getElementById('int-diag').value||'—';
+    var amt=document.getElementById('int-amt').value;
+    var amtF=amt?'₹'+Number(amt).toLocaleString('en-IN'):'—';
+    var sel=document.getElementById('int-tpa-sel');
+    var tpaName=sel?sel.options[sel.selectedIndex].text:'TPA';
+    var tpaEmail=document.getElementById('int-tpa-email').value;
+    var note=document.getElementById('int-note').value;
+    res='To,\nThe Claims Department,\n'+tpaName+'\nEmail: '+tpaEmail+'\n\n'+(eng?'Subject: Health Insurance Claim Intimation – Policy No. '+polno+'\n\nDear Sir/Madam,\n\nI am intimating a health insurance claim on behalf of my client.\n\n📋 POLICY DETAILS:\nInsured Name: '+name+'\nPolicy Number: '+polno+'\nMobile: '+phone+'\n\n🏥 HOSPITALIZATION DETAILS:\nHospital: '+hosp+'\nAdmission Date: '+fd+'\nDiagnosis: '+diag+'\nEstimated Amount: '+amtF+(note?'\n\nAdditional Details: '+note:'')+'\n\nKindly register this claim and provide the claim number.\n\nThank you.\n\n'+sign:'विषय: Health Insurance Claim Intimation – Policy No. '+polno+'\n\nमहोदय/महोदया,\n\nमाझ्या client च्या वतीने health insurance claim ची intimation देत आहे.\n\n📋 Policy Details:\nविमाधारकाचे नाव: '+name+'\nPolicy Number: '+polno+'\nMobile: '+phone+'\n\n🏥 Hospitalization Details:\nHospital: '+hosp+'\nAdmission Date: '+fd+'\nDiagnosis: '+diag+'\nEstimated Amount: '+amtF+(note?'\n\nAdditional Details: '+note:'')+'\n\nकृपया claim register करून claim number द्यावे.\n\nधन्यवाद.\n\n'+sign);
+    var sub=encodeURIComponent('Health Claim Intimation – Policy '+polno+' – '+name);
+    var ea=document.getElementById('int-email-a');if(ea)ea.href='mailto:'+tpaEmail+'?subject='+sub+'&body='+encodeURIComponent(res);
+    curTPAPhone=sel?sel.value.split('|')[2]:'18002091415';
+  }else{
+    var vehno=document.getElementById('int-vehno').value||'—';
+    var accdate=document.getElementById('int-accdate').value;var accF=accdate?new Date(accdate).toLocaleString('en-IN'):'—';
+    var loc=document.getElementById('int-loc').value||'—';var loss=document.getElementById('int-loss').value;
+    var inj=document.getElementById('int-inj').value||'No injuries';var fir=document.getElementById('int-fir').value||'N/A';
+    var garage=document.getElementById('int-garage').value||'—';var note2=document.getElementById('int-note2').value;
+    res='To,\nThe Claims Department,\nNew India Assurance Co. Ltd.\nEmail: customercare@newindia.co.in\n\n'+(eng?'Subject: Motor Insurance Claim Intimation – Policy No. '+polno+'\n\nDear Sir/Madam,\n\nI wish to intimate a motor insurance claim for my client.\n\n📋 POLICY DETAILS:\nInsured Name: '+name+'\nPolicy Number: '+polno+'\nMobile: '+phone+'\nVehicle Number: '+vehno+'\n\n🚗 ACCIDENT DETAILS:\nDate & Time: '+accF+'\nLocation: '+loc+'\nNature of Loss: '+loss+'\nInjuries: '+inj+'\nFIR Number: '+fir+'\nGarage: '+garage+(note2?'\n\nAdditional Details: '+note2:'')+'\n\nPlease register this claim and send a surveyor.\n\nThank you.\n\n'+sign:'विषय: Motor Insurance Claim Intimation – Policy No. '+polno+'\n\nमहोदय/महोदया,\n\nMaझ्या client च्या वतीने motor insurance claim ची intimation देत आहे.\n\n📋 Policy Details:\nनाव: '+name+'\nPolicy No: '+polno+'\nMobile: '+phone+'\nVehicle: '+vehno+'\n\n🚗 Accident Details:\nDate & Time: '+accF+'\nLocation: '+loc+'\nNature of Loss: '+loss+'\nInjuries: '+inj+'\nFIR: '+fir+'\nGarage: '+garage+(note2?'\n\nAdditional Details: '+note2:'')+'\n\nकृपया claim register करून surveyor पाठवावे.\n\nधन्यवाद.\n\n'+sign);
+    var ea2=document.getElementById('int-email-a');var sub2=encodeURIComponent('Motor Claim Intimation – Policy '+polno+' – '+name);
+    if(ea2)ea2.href='mailto:customercare@newindia.co.in?subject='+sub2+'&body='+encodeURIComponent(res);
+    curTPAPhone='18002091415';
+  }
+  if(mode==='ai'){
+    document.getElementById('int-load').style.display='block';document.getElementById('int-out').style.display='none';
+    fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Improve this insurance claim intimation letter professionally in '+(eng?'English':'Marathi')+'. Keep all details and the exact signature. Original:\n'+res}]})})
+    .then(function(r){return r.json();}).then(function(d){document.getElementById('int-load').style.display='none';var ai=d.content&&d.content[0]?d.content[0].text:res;document.getElementById('int-res').value=ai;document.getElementById('int-out').style.display='block';syncWa('int-res','int-wa');document.getElementById('int-out').scrollIntoView({behavior:'smooth'});})
+    .catch(function(){document.getElementById('int-load').style.display='none';document.getElementById('int-res').value=res;document.getElementById('int-out').style.display='block';syncWa('int-res','int-wa');});
+  }else{document.getElementById('int-res').value=res;document.getElementById('int-out').style.display='block';syncWa('int-res','int-wa');document.getElementById('int-out').scrollIntoView({behavior:'smooth'});}
+}
+
+// ════ TPA CONTACTS ════
+function getTPAData(){try{var d=JSON.parse(localStorage.getItem('pp_tpa')||'[]');return d.length?d:getDefaultTPAs();}catch{return getDefaultTPAs();}}
+function saveTPAData(d){localStorage.setItem('pp_tpa',JSON.stringify(d));}
+function getDefaultTPAs(){return[
+  {id:'tpa1',type:'tpa',name:'Paramount Health Services',phone:'1800-1800-2243',email:'claims@paramounttpa.com',web:'paramounttpa.com',note:'Primary TPA – Cashless & Reimbursement'},
+  {id:'tpa2',type:'tpa',name:'Medi Assist India',phone:'1800-425-9449',email:'support@mediassist.in',web:'mediassist.in',note:'10,000+ Network Hospitals'},
+  {id:'tpa3',type:'tpa',name:'FHPL (Family Health Plan)',phone:'1800-425-4333',email:'fhplclaims@fhpl.net',web:'fhpl.net',note:'Health TPA Services'},
+  {id:'tpa4',type:'tpa',name:'Vipul Medcorp',phone:'1800-103-4165',email:'claims@vipulmedcorp.com',web:'vipulmedcorp.com',note:'Health TPA'},
+  {id:'off1',type:'office',name:'NIA Customer Care',phone:'1800-209-1415',email:'customercare@newindia.co.in',web:'newindia.co.in',note:'24×7 Free Helpline'},
+  {id:'off2',type:'office',name:'IRDAI Helpline',phone:'155255',email:'complaints@irda.gov.in',web:'irdai.gov.in',note:'Insurance Regulator'}
+];}
+function renderTPAContacts(){
+  var all=getTPAData();
+  function renderList(items,id){
+    var box=document.getElementById(id);if(!box)return;
+    if(!items.length){box.innerHTML='<p style="font-size:12px;color:var(--muted);padding:6px">अजून कोणी नाही.</p>';return;}
+    box.innerHTML=items.map(function(t){
+      return '<div class="tpa-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h3>'+t.name+'</h3><p>'+t.note+'</p></div><button onclick="openTPAForm(\''+t.type+'\',\''+t.id+'\')" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted)">✏️</button></div><div class="tpa-acts"><a href="tel:'+t.phone.replace(/-/g,'')+'" class="tpa-act call"><span class="ti">📞</span>Call</a><a href="mailto:'+t.email+'" class="tpa-act mail"><span class="ti">📧</span>Email</a><button onclick="cpn(\''+t.phone+'\')" class="tpa-act copy"><span class="ti">📋</span>Copy No.</button></div></div>';
+    }).join('');
+  }
+  renderList(all.filter(function(x){return x.type==='tpa';}), 'tpa-list-view');
+  renderList(all.filter(function(x){return x.type==='office';}), 'office-list-view');
+}
+function cpn(txt){navigator.clipboard.writeText(txt).then(function(){showToast('📋 '+txt+' copied!');});}
+function openTPAForm(type,editId){
+  document.getElementById('tf-id').value=editId||'';
+  document.getElementById('tf-type').value=type;
+  document.getElementById('tpa-form-title').textContent=editId?'✏️ Contact Edit':'➕ '+(type==='tpa'?'TPA':'Office')+' Add करा';
+  ['tf-name','tf-phone','tf-email','tf-web','tf-note'].forEach(function(id){document.getElementById(id).value='';});
+  if(editId){var t=getTPAData().find(function(x){return x.id===editId;});if(t){document.getElementById('tf-name').value=t.name||'';document.getElementById('tf-phone').value=t.phone||'';document.getElementById('tf-email').value=t.email||'';document.getElementById('tf-web').value=t.web||'';document.getElementById('tf-note').value=t.note||'';}}
+  openOv('ov-tpa');
+}
+function saveTPAContact(){
+  var name=document.getElementById('tf-name').value.trim();if(!name){alert('नाव टाका');return;}
+  var all=getTPAData();var editId=document.getElementById('tf-id').value;
+  var data={id:editId||'tpa'+Date.now(),type:document.getElementById('tf-type').value,name:name,phone:document.getElementById('tf-phone').value,email:document.getElementById('tf-email').value,web:document.getElementById('tf-web').value,note:document.getElementById('tf-note').value};
+  if(editId){var i=all.findIndex(function(x){return x.id===editId;});if(i>=0)all[i]=data;else all.push(data);}else{all.push(data);}
+  saveTPAData(all);closeOv('ov-tpa');renderTPAContacts();showToast('✅ Contact Save झाला!');
+}
+
+// ════ DOCUMENTS ════
+var docData={
+  'health-form':{title:'🏥 Health Insurance – Proposal Form',body:'<h4 style="color:var(--blue);margin-bottom:8px">📋 आवश्यक माहिती:</h4><ul style="padding-left:16px;line-height:2"><li>पूर्ण नाव, पत्ता, जन्मतारीख</li><li>Family members – नाव व वय</li><li>मागील 3 वर्षांचा medical history</li><li>Pre-existing diseases</li><li>Nominee – नाव व नाते</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">📄 Documents:</h4><ul style="padding-left:16px;line-height:2"><li>Age proof (Aadhar)</li><li>Address proof</li><li>2 Passport photos</li><li>मागील policy copy</li></ul>'},
+  'motor-form':{title:'🚗 Motor Insurance – Proposal Form',body:'<h4 style="color:var(--blue);margin-bottom:8px">🚗 Car:</h4><ul style="padding-left:16px;line-height:2"><li>RC Book</li><li>Engine & Chassis Number</li><li>Previous policy (NCB)</li><li>Owner ID proof</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">🚲 Two Wheeler:</h4><ul style="padding-left:16px;line-height:2"><li>RC Book copy</li><li>Engine & Chassis Number</li><li>Owner ID proof</li></ul>'},
+  'health-claim':{title:'🏥 Health Claim Documents',body:'<h4 style="color:var(--blue);margin-bottom:8px">🏥 Cashless:</h4><ul style="padding-left:16px;line-height:2"><li>✅ TPA Health Card</li><li>✅ Aadhar Card</li><li>✅ Doctor\'s letter</li><li>✅ Pre-authorization form</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">💰 Reimbursement:</h4><ul style="padding-left:16px;line-height:2"><li>✅ Claim Form (2 copies)</li><li>✅ Original hospital bills</li><li>✅ Discharge summary</li><li>✅ Lab reports</li><li>✅ Medicine bills</li><li>✅ Cancelled cheque</li></ul>'},
+  'motor-claim':{title:'🚗 Motor Claim Documents',body:'<h4 style="color:var(--blue);margin-bottom:8px">🚨 Accident:</h4><ul style="padding-left:16px;line-height:2"><li>✅ Motor Claim Form</li><li>✅ RC + Driving Licence</li><li>✅ Policy copy</li><li>✅ FIR copy (Third party)</li><li>✅ Vehicle photos</li><li>✅ Repair estimate</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">🔓 Theft:</h4><ul style="padding-left:16px;line-height:2"><li>✅ FIR copy</li><li>✅ Final Police Report</li><li>✅ All keys</li></ul>'},
+  'contacts':{title:'📞 Important Contacts',body:'<div style="background:#F0FDF4;border-radius:12px;padding:14px;margin-bottom:10px"><div style="font-weight:700;color:#065F46;margin-bottom:8px">🆘 Helplines</div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px dashed #BBF7D0"><span>NIA Customer Care</span><strong>1800-209-1415</strong></div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px dashed #BBF7D0"><span>Paramount TPA</span><strong>1800-1800-2243</strong></div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px dashed #BBF7D0"><span>Medi Assist</span><strong>1800-425-9449</strong></div><div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span>IRDAI</span><strong>155255</strong></div></div><button onclick="window.open(\'tel:18002091415\')" style="width:100%;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;padding:12px;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">📞 NIA Helpline Call करा</button>'},
+  'checklist':{title:'✅ Adviser Checklist',body:'<h4 style="color:var(--blue);margin-bottom:8px">🔄 Renewal:</h4><ul style="padding-left:16px;line-height:2"><li>☐ 45 दिवस आधी client ला कळवले?</li><li>☐ Premium confirm केला?</li><li>☐ Payment confirmation मिळाले?</li><li>☐ Policy copy दिली?</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">📋 Claim:</h4><ul style="padding-left:16px;line-height:2"><li>☐ TPA ला 24 तासांत कळवले?</li><li>☐ Original documents आहेत?</li><li>☐ Claim number मिळाला?</li></ul><h4 style="color:var(--blue);margin:12px 0 8px">🌟 Pro Tips:</h4><ul style="padding-left:16px;line-height:2"><li>दर 6 महिन्यांनी client ला call करा</li><li>Policy expiry 45, 15, 5 दिवस आधी message</li><li>Referral मागायला विसरू नका! 😊</li></ul>'}
+};
+function liveProfile(){
+  var n=document.getElementById('set-name').value;var b=document.getElementById('set-branch').value;
+  document.getElementById('prof-name').textContent=n||'तुमचे नाव';
+  document.getElementById('prof-branch').textContent=b||'New India Assurance';
+  document.getElementById('prof-av').textContent=n?n.split(' ').map(function(w){return w[0];}).join('').substr(0,2).toUpperCase():'👤';
+}
+function saveProfile(){
+  var s={name:document.getElementById('set-name').value,mobile:document.getElementById('set-mobile').value,branch:document.getElementById('set-branch').value,agentcode:document.getElementById('set-agentcode').value,email:document.getElementById('set-email').value,lang:appLang};
+  localStorage.setItem('pp_profile',JSON.stringify(s));
+  document.getElementById('dash-adviser').textContent=s.name?'👤 '+s.name:'⚙️ Settings मध्ये नाव टाका';
+  showToast('✅ Profile Save झाला!');
+}
+function exportData(){var data={clients:DB.get(),profile:JSON.parse(localStorage.getItem('pp_profile')||'{}'),tpa:getTPAData(),date:new Date().toISOString()};var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='PolicyPro_Backup_'+new Date().toISOString().split('T')[0]+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);showToast('✅ Backup झाले!');}
+function clearData(){if(!confirm('⚠️ सर्व data delete होईल!'))return;localStorage.removeItem('pp_v5');renderDash();renderClients();fillDropdowns();showToast('🗑️ Delete झाले');}
+
+// ════ CALENDAR ════
+function addToCalendar(id){
+  var c=DB.get().find(function(x){return x.id===id;});
+  if(!c||!c.renew){showToast('⚠️ Renewal date नाही');return;}
+  var rd=new Date(c.renew);var p=JSON.parse(localStorage.getItem('pp_profile')||'{}');
+  var title=encodeURIComponent('🔔 '+c.name+' – '+(c.itype||'Policy')+' Renewal');
+  var details=encodeURIComponent('Renewal Reminder\nClient: '+c.name+'\nMobile: '+c.phone+(p.name?'\nAdviser: '+p.name:'')+(p.mobile?'\n📱 '+p.mobile:'')+'\nNew India Assurance');
+  var ds=rd.toISOString().replace(/-/g,'').substr(0,8);
+  window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text='+title+'&dates='+ds+'/'+ds+'&details='+details,'_blank');
+  showToast('📅 Calendar उघडले!');
+}
+
+// ════ OVERLAY ════
+function openOv(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeOv(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===this)closeOv(this.id);});});
+var _k=0,_h=[];
+function renderGrowth(){gT(0);}
+function renderAnalytics(){aT(0);}
+function gT(n){[0,1,2].forEach(function(i){document.getElementById('g'+i).style.display=i===n?'':'none';});document.querySelectorAll('#g-tb .tab').forEach(function(b,i){b.classList.toggle('on',i===n);});if(n===1)rBd();if(n===2)rBk();}
+function aT(n){[0,1,2,3].forEach(function(i){document.getElementById('a'+i).style.display=i===n?'':'none';});document.querySelectorAll('#a-tb .tab').forEach(function(b,i){b.classList.toggle('on',i===n);});if(n===0)rPr();if(n===1)rTp();}
+function qT(n){['qh','qm'].forEach(function(x,i){document.getElementById(x).style.display=i===n?'':'none';});document.querySelectorAll('#q-tb .tab').forEach(function(b,i){b.classList.toggle('on',i===n);});document.getElementById('qr').innerHTML='';}
+function bkT(n){_k=n;document.querySelectorAll('#bk-tb .tab').forEach(function(b,i){b.classList.toggle('on',i===n);});rBk();}
+function gR(){try{return JSON.parse(localStorage.getItem('pp_rem')||'[]');}catch(e){return[];}}
+function sRm(d){localStorage.setItem('pp_rem',JSON.stringify(d));}
+function openRemModal(){var s=document.getElementById('rc');s.innerHTML='<option value="">-- निवडा --</option>'+DB.get().map(function(c){return'<option value="'+c.id+'">'+c.name+'</option>';}).join('');document.getElementById('rd').value=new Date().toISOString().split('T')[0];document.getElementById('rn').value='';openOv('ov-rem');}
+function saveRem(){var dt=document.getElementById('rd').value;if(!dt){alert('Date टाका');return;}var cid=document.getElementById('rc').value,cl=DB.get().find(function(x){return x.id===cid;}),r=gR();r.push({id:'r'+Date.now(),cid:cid,cname:cl?cl.name:'',cphone:cl?cl.phone:'',rsn:document.getElementById('rr').value,dt:dt,note:document.getElementById('rn').value,done:false});sRm(r);closeOv('ov-rem');rRm();showToast('Reminder Saved!');}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;var a=b.dataset.act,id=b.dataset.id,ph=b.dataset.ph;if(a==='wa')window.open('https://wa.me/91'+ph,'_blank');else if(a==='dn'){var r=gR(),i=r.findIndex(function(x){return x.id===id;});if(i>=0){r[i].done=true;sRm(r);rRm();}}else if(a==='dl'){sRm(gR().filter(function(x){return x.id!==id;}));rRm();}});
+function rRm(){var td=new Date().toISOString().split('T')[0],r=gR().filter(function(x){return!x.done;}).sort(function(a,b){return a.dt.localeCompare(b.dt);});var box=document.getElementById('rem-list');if(!box)return;if(!r.length){box.innerHTML='<div class="empty"><div class="ei">✅</div><p>Reminder नाही</p></div>';}else{var h='';for(var i=0;i<r.length;i++){var x=r[i],bg=x.dt<td?'#FEF2F2':x.dt===td?'#FFFBEB':'#F0FDF4',bc=x.dt<td?'#FECACA':x.dt===td?'#FDE68A':'#BBF7D0',lbl=x.dt<td?'Overdue':x.dt===td?'आज':new Date(x.dt).toLocaleDateString('en-IN',{day:'numeric',month:'short'});h+='<div class="zc" style="background:'+bg+';border:1.5px solid '+bc+'"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><strong>'+(x.cname||'General')+'</strong><span style="font-size:11px;color:var(--muted)">'+lbl+'</span></div><div style="font-size:12px;color:var(--muted)">'+x.rsn+'</div><div style="display:flex;gap:6px;margin-top:7px">'+(x.cphone?'<button data-act="wa" data-ph="'+x.cphone+'" style="flex:1;padding:6px;background:#25D366;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">💬</button>':'')+'<button data-act="dn" data-id="'+x.id+'" style="flex:1;padding:6px;background:#ECFDF5;color:#059669;border:1px solid #A7F3D0;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">✅</button><button data-act="dl" data-id="'+x.id+'" style="padding:6px 9px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:7px;font-size:11px;cursor:pointer;color:#9CA3AF">🗑️</button></div></div>';}box.innerHTML=h;}var t0=new Date();t0.setHours(0,0,0,0);var up=DB.get().filter(function(c){if(!c.renew)return false;var d=new Date(c.renew);d.setHours(0,0,0,0);return Math.round((d-t0)/864e5)<=30;});var rb=document.getElementById('ren-list');if(rb){if(!up.length){rb.innerHTML='<div class="empty"><div class="ei">🎉</div><p>30 दिवसांत renewal नाही</p></div>';}else{var h2='';for(var j=0;j<up.length;j++){var cc=up[j],d2=new Date(cc.renew);d2.setHours(0,0,0,0);var df=Math.round((d2-t0)/864e5);h2+='<div style="background:var(--bg);border-radius:10px;padding:10px;margin-bottom:6px;border-left:3px solid '+(df<=7?'#EF4444':df<=15?'#F97316':'#10B981')+'"><div style="display:flex;align-items:center;justify-content:space-between"><div><strong>'+cc.name+'</strong><div style="font-size:11px;color:var(--muted)">'+df+' दिवसांत</div></div><button data-act="wa" data-ph="'+cc.phone+'" style="background:#25D366;color:#fff;border:none;padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer">💬</button></div></div>';}rb.innerHTML=h2;}}}
+function rBd(){var td=new Date();td.setHours(0,0,0,0);function du(ds){if(!ds)return 999;var d=new Date(ds),n=new Date(td.getFullYear(),d.getMonth(),d.getDate());if(n<td)n.setFullYear(td.getFullYear()+1);return Math.round((n-td)/864e5);}var cl=DB.get(),bb=document.getElementById('bday-list'),bc=cl.filter(function(c){return c.bday;}).map(function(c){return{c:c,d:du(c.bday)};}).filter(function(x){return x.d<=30;}).sort(function(a,b){return a.d-b.d;});if(bb)bb.innerHTML=!bc.length?'<div class="empty"><div class="ei">🎂</div><p>Birthday नाही</p></div>':bc.map(function(x){return'<div class="yc"><div style="font-size:22px">🎂</div><div style="flex:1"><strong>'+x.c.name+'</strong><div style="font-size:11px;color:var(--muted)">'+(x.d===0?'आज!':x.d+' दिवसांत')+'</div></div><a href="https://wa.me/91'+x.c.phone+'?text='+encodeURIComponent('नमस्कार '+x.c.name+' जी! वाढदिवसाच्या शुभेच्छा! 🎂')+'" target="_blank" style="background:#25D366;color:#fff;padding:7px 10px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">Wish</a></div>';}).join('');var ab=document.getElementById('anniv-list'),ac=cl.filter(function(c){return c.anniv;}).map(function(c){return{c:c,d:du(c.anniv)};}).filter(function(x){return x.d<=30;}).sort(function(a,b){return a.d-b.d;});if(ab)ab.innerHTML=!ac.length?'<div class="empty"><div class="ei">💍</div><p>Anniversary नाही</p></div>':ac.map(function(x){return'<div class="yc" style="border-left-color:#EC4899"><div style="font-size:22px">💍</div><div style="flex:1"><strong>'+x.c.name+'</strong><div style="font-size:11px;color:var(--muted)">'+(x.d===0?'आज!':x.d+' दिवसांत')+'</div></div><a href="https://wa.me/91'+x.c.phone+'?text='+encodeURIComponent('नमस्कार '+x.c.name+' जी! लग्नाच्या वाढदिवसाच्या शुभेच्छा! 💍')+'" target="_blank" style="background:#EC4899;color:#fff;padding:7px 10px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">Wish</a></div>';}).join('');}
+function rBk(){var t0=new Date();t0.setHours(0,0,0,0);var cl=DB.get();if(_k===0)cl=cl.filter(function(c){if(!c.renew)return false;var d=new Date(c.renew);d.setHours(0,0,0,0);return Math.round((d-t0)/864e5)<=30;});var box=document.getElementById('bk-list');if(!box)return;var el=document.getElementById('bk-msg');if(el&&!el.value)el.value='नमस्कार {नाव} जी! Renewal येत आहे.';box.innerHTML=!cl.length?'<p style="font-size:12px;color:var(--muted)">Client नाही</p>':cl.map(function(c){return'<div class="wr"><input type="checkbox" class="bchk" data-name="'+c.name+'" data-phone="'+c.phone+'" checked style="width:18px;height:18px"><div><strong>'+c.name+'</strong><div style="font-size:11px;color:var(--muted)">'+c.phone+'</div></div></div>';}).join('');}
+function sendBulk(){var ch=Array.from(document.querySelectorAll('.bchk:checked'));if(!ch.length){alert('Client निवडा');return;}var t=document.getElementById('bk-msg').value;if(!t){alert('Message लिहा');return;}var i=0;(function n(){if(i>=ch.length){showToast(ch.length+' sent!');return;}var el=ch[i++];window.open('https://wa.me/91'+el.dataset.phone+'?text='+encodeURIComponent(t.replace(/{नाव}/g,el.dataset.name)),'_blank');setTimeout(n,1500);})();}
+function rPr(){var cl=DB.get(),yd={},tot=0,yr=new Date().getFullYear();cl.forEach(function(c){if(!c.premHistory)return;c.premHistory.forEach(function(p){yd[p.yr]=(yd[p.yr]||0)+p.amt;tot+=p.amt;});});function sv(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}sv('st','Rs.'+tot.toLocaleString('en-IN'));sv('sy','Rs.'+(yd[yr]||0).toLocaleString('en-IN'));sv('sc','Rs.'+Math.round(tot*.15).toLocaleString('en-IN'));sv('sn',cl.length);var box=document.getElementById('pc');if(!box)return;var yrs=Object.keys(yd).sort();if(!yrs.length){box.innerHTML='<div class="empty"><div class="ei">📈</div><p>Premium history नाही</p></div>';return;}var mx=Math.max.apply(null,yrs.map(function(y){return yd[y];}));box.innerHTML=yrs.map(function(y){var p=Math.round(yd[y]/mx*100);return'<div class="xr"><div class="xl">'+y+'</div><div class="xb"><div class="xf" style="width:'+p+'%"></div></div><div class="xv">Rs.'+yd[y].toLocaleString('en-IN')+'</div></div>';}).join('');}
+function rTp(){var cl=DB.get().map(function(c){var t=c.premHistory?c.premHistory.reduce(function(s,p){return s+p.amt;},0):0;return{c:c,t:t};}).filter(function(x){return x.t>0;}).sort(function(a,b){return b.t-a.t;});var box=document.getElementById('tl');if(!box)return;var co=['#F59E0B','#94A3B8','#B45309'];box.innerHTML=!cl.length?'<div class="empty"><div class="ei">🏆</div><p>Premium data नाही</p></div>':cl.slice(0,10).map(function(x,i){var ini=x.c.name.split(' ').map(function(w){return w[0];}).join('').substr(0,2).toUpperCase();return'<div style="background:var(--card);border-radius:12px;padding:11px;margin-bottom:7px;display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:8px;background:'+(co[i]||'#1E40AF')+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff">'+ini+'</div><div style="flex:1"><strong>'+x.c.name+'</strong><div style="font-size:11px;color:var(--muted)">'+x.c.phone+'</div></div><strong style="color:#1E40AF">Rs.'+x.t.toLocaleString('en-IN')+'</strong></div>';}).join('');}
+function cQ(tp){var res='';if(tp===0){var ag=parseInt(document.getElementById('qa').value)||30,fm=parseInt(document.getElementById('qf').value)||2,sm=parseInt(document.getElementById('qs').value)||500000,ba=sm<=300000?3500:sm<=500000?6500:sm<=1000000?11000:20000,p=Math.round(ba*(ag<25?.8:ag<35?1:ag<45?1.3:ag<55?1.7:2.3)*(fm<=1?.7:fm<=2?1:fm<=3?1.2:fm<=4?1.4:1.8)/100)*100,g=Math.round(p*.18/100)*100;res='<div style="background:linear-gradient(135deg,#0A1628,#1E40AF);border-radius:14px;padding:14px;color:#fff;text-align:center;margin-top:10px"><div style="font-size:11px;opacity:.8">Health Estimate</div><div style="font-size:24px;font-weight:700;margin:5px 0">Rs.'+(p+g).toLocaleString('en-IN')+'/yr</div><div style="font-size:11px;opacity:.7">Base Rs.'+p.toLocaleString('en-IN')+' + GST Rs.'+g.toLocaleString('en-IN')+'</div></div>';}else{var vt=document.getElementById('qv').value,vy=parseInt(document.getElementById('qy').value)||2022,idv=parseInt(document.getElementById('qi').value)||500000,ncb=parseInt(document.getElementById('qn').value)||0,dep=new Date().getFullYear()-vy;dep=dep<=1?0:dep<=3?.15:dep<=5?.3:.4;var adj=Math.round(idv*(1-dep)/1000)*1000,od=vt==='car'?Math.round(adj*.0125):Math.round(adj*.012),tp2=vt==='car'?7897:2383,di=Math.round(od*ncb/100),net=od-di+tp2,gst=Math.round(net*.18);res='<div style="background:linear-gradient(135deg,#0A1628,#1E40AF);border-radius:14px;padding:14px;color:#fff;text-align:center;margin-top:10px"><div style="font-size:11px;opacity:.8">'+(vt==='car'?'Car':'Bike')+' Estimate</div><div style="font-size:24px;font-weight:700;margin:5px 0">Rs.'+(net+gst).toLocaleString('en-IN')+'/yr</div><div style="font-size:11px;opacity:.7">IDV Rs.'+adj.toLocaleString('en-IN')+' NCB -Rs.'+di.toLocaleString('en-IN')+'</div></div>';}document.getElementById('qr').innerHTML=res;}
+function dC(){var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg)return;inp.value='';var box=document.getElementById('cb');box.innerHTML+='<div style="padding:8px 11px;border-radius:11px;font-size:13px;background:var(--navy);color:#fff;align-self:flex-end;margin-left:auto;max-width:84%">'+msg+'</div>';box.scrollTop=box.scrollHeight;_h.push({role:'user',content:msg});box.innerHTML+='<div id="ct" style="padding:8px 11px;border-radius:11px;font-size:13px;background:#fff;color:var(--navy);max-width:84%">⏳...</div>';box.scrollTop=box.scrollHeight;fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'Insurance assistant New India Assurance. Marathi or English. Max 4 lines.',messages:_h})}).then(function(r){return r.json();}).then(function(d){var rep=d.content&&d.content[0]?d.content[0].text:'परत प्रयत्न करा.';_h.push({role:'assistant',content:rep});var el=document.getElementById('ct');if(el){el.removeAttribute('id');el.textContent=rep;}box.scrollTop=box.scrollHeight;}).catch(function(){var el=document.getElementById('ct');if(el){el.removeAttribute('id');el.textContent='Internet check करा.';}});}
+
+</script>
+</body>
+</html>
